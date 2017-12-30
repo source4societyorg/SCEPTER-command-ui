@@ -1,7 +1,7 @@
 'use strict'
-const fs = require('fs')
-const AWS = require('aws-sdk')
-const mime = require('mime-types')
+global.fs = require('fs')
+global.AWS = require('aws-sdk')
+global.mime = require('mime-types')
 
 const uiDeployWebS3Command = {
   command: 'ui:deployWebS3',
@@ -23,6 +23,9 @@ function callbackFunction (args, credentials, command) {
   this.bucket = bucket
   this.env = env
   this.uiName = uiName
+  this.fs = global.fs
+  this.AWS = global.AWS
+  this.mime = global.mime
   if (typeof bucket === 'undefined' || typeof uiName === 'undefined') {
     command.printMessage('Usage: node bin/scepter ' + uiDeployWebS3Command.usage)
   } else {
@@ -47,15 +50,15 @@ function executeDeployFunction (command) {
 }
 
 function executeAwsDeployFunction (command) { // eslint-disable-line no-unused-vars
-  const files = fs.readdirSync('./ui/' + uiDeployWebS3Command.uiName + '/build')
-  const s3 = new AWS.S3()
-  uiDeployWebS3Command.commandObject.printMessage('Uploading ' + files.length + ' objects.')
+  const files = uiDeployWebS3Command.fs.readdirSync('./ui/' + uiDeployWebS3Command.uiName + '/build')
+  const s3 = new uiDeployWebS3Command.AWS.S3()
+  command.printMessage('Uploading ' + files.length + ' objects.')
   for (var index = 0; index < files.length; index++) {
     (function (file) {
-      const mimeType = mime.lookup('./ui/' + uiDeployWebS3Command.uiName + '/build/' + file)
-      uiDeployWebS3Command.commandObject.printMessage('Uploaded ' + file)
-      fs.readFile('./ui/' + uiDeployWebS3Command.uiName + '/build/' + file, function (err, data) {
-        if (typeof err === 'undefined' || err === null) {
+      const mimeType = uiDeployWebS3Command.mime.lookup('./ui/' + uiDeployWebS3Command.uiName + '/build/' + file)
+      command.printMessage('Uploaded ' + file)
+      uiDeployWebS3Command.fs.readFile('./ui/' + uiDeployWebS3Command.uiName + '/build/' + file, function (err, data) {
+        if (typeof err !== 'undefined' && err !== null) {
           command.printMessage(err.message)
         } else {
           let params = {
@@ -76,7 +79,7 @@ function executeAwsDeployFunction (command) { // eslint-disable-line no-unused-v
 
 function uploadCallbackFunction (err, data) {
   if (err) {
-    uiDeployWebS3Command.commandObject.printMessage(err)
+    uiDeployWebS3Command.commandObject.printMessage(err.message)
     uiDeployWebS3Command.commandObject.printMessage(err.stack)
   } else {
     uiDeployWebS3Command.commandObject.printMessage(data)
