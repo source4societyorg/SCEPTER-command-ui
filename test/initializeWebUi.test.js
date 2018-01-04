@@ -43,13 +43,13 @@ test('initializeWebCommand executes commands in sequence', (done) => {
       expect(commandArguments[3].name).toEqual('executeInitializeRepositoryFunction')
 
       commandArguments = yield 'initializeRepositoryCommandArguments'
-      expect(commandArguments[0]).toEqual('cd ui/uiname;git remote add origin targetrepo; git push -f origin master')
+      expect(commandArguments[0]).toEqual('cd ui/uiname;git remote add origin targetrepo; git push origin master')
       expect(commandArguments[1].length).toBeGreaterThan(0)
       expect(commandArguments[2].length).toBeGreaterThan(0)
       expect(commandArguments[3].name).toEqual('executeAddUiAsSubmoduleFunction')
 
       commandArguments = yield 'initializeRepositoryCommandArguments'
-      expect(commandArguments[0]).toEqual('rm -rf ./ui/uiname; git submodule add --force targetrepo ui/uiname')
+      expect(commandArguments[0]).toEqual('rm -r -f ./ui/uiname; git submodule add --force targetrepo ui/uiname')
       expect(commandArguments[1].length).toBeGreaterThan(0)
       expect(commandArguments[2].length).toBeGreaterThan(0)
       expect(commandArguments[3].name).toEqual('executeInstallFunction')
@@ -74,6 +74,40 @@ test('initializeWebCommand executes commands in sequence', (done) => {
 
   const command = {
     executeCommand: mockExecuteCommand
+  }
+
+  const testGenerator = testCommandsInSequence()
+  testGenerator.next() // Initialize generator to first yield
+  initializeWebCommand.callback(['node', 'path', 'something', 'uiname', 'targetrepo', 'forkrepo'], null, command)
+})
+
+test('initializeWebCommand modified command for powershell', (done) => {
+  function * testCommandsInSequence () {
+    while (true) {
+      let commandArguments = yield 'cloneCommandArguments'
+      commandArguments = yield 'repositoryModificationCommandArguments'
+      commandArguments = yield 'initializeRepositoryCommandArguments'
+      expect(commandArguments[0]).toEqual('cd ui/uiname;git remote add origin targetrepo; git push origin master')
+
+      commandArguments = yield 'initializeRepositoryCommandArguments'
+      expect(commandArguments[0]).toEqual('rm -r -fo ./ui/uiname; git submodule add --force targetrepo ui/uiname')
+
+      return
+    }
+  }
+
+  const mockExecuteCommand = (commandString, successMessage, errorMessage, nextFunctionCall) => {
+    testGenerator.next([commandString, successMessage, errorMessage, nextFunctionCall])
+    if (typeof nextFunctionCall !== 'undefined') {
+      nextFunctionCall(command)
+    } else {
+      done()
+    }
+  }
+
+  const command = {
+    executeCommand: mockExecuteCommand,
+    parameters: { shell: 'powershell' }
   }
 
   const testGenerator = testCommandsInSequence()

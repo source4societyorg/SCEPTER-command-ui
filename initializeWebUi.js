@@ -46,7 +46,7 @@ function executeRepositoryModificationFunction (command) {
 
 function executeInitializeRepositoryFunction (command) {
   command.executeCommand(
-    'cd ui/' + initializeWebCommand.uiName + ';git remote add origin ' + initializeWebCommand.targetRepository + '; git push -f origin master',
+    'cd ui/' + initializeWebCommand.uiName + ';git remote add origin ' + initializeWebCommand.targetRepository + '; git push origin master',
     'Successfully forked ' + initializeWebCommand.forkRepository + ' into ' + initializeWebCommand.targetRepository,
     'Failed to fork source repository',
     initializeWebCommand.executeAddUiAsSubmoduleCommand
