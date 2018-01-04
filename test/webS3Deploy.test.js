@@ -1,5 +1,5 @@
 const webS3DeployCommand = require('../webS3Deploy.js')
-const mockReaddirSync = (folder) => ['afile.html','afile.js','anotherfile.jpg']
+const mockReaddirSync = (folder) => ['afile.html', 'afile.js', 'anotherfile.jpg']
 const mockMimeLookup = (filepath) => 'test/filemime'
 
 test('webS3DeployCommand has the correct command property', () => {
@@ -12,7 +12,6 @@ test('webS3DeployCommand has a usage property defined', () => {
 })
 
 test('webS3DeployCommand has callback which sets up and kicks off command execution', (done) => {
-
   const mockExecuteCommand = (commandString, successMessage, errorMessage, nextFunctionCall) => {
     expect(successMessage.length).toBeGreaterThan(0)
     expect(errorMessage.length).toBeGreaterThan(0)
@@ -32,31 +31,31 @@ test('webS3DeployCommand has callback which sets up and kicks off command execut
     printMessage: mockPrintCommand
   }
 
-  webS3DeployCommand.callback(['node', 'path', 'something', 'bucket', 'uiname', 'test'], { environments: { test: { provider: 'test' } } }, command)  
+  webS3DeployCommand.callback(['node', 'path', 'something', 'bucket', 'uiname', 'test'], { environments: { test: { provider: 'test' } } }, command)
 })
 
 test('webS3DeployCommand executes commands in sequence (with aws provider)', (done) => {
-  function* countPrintCalls () {
-    for(i = 0; i < 7; i++) {
+  function * countPrintCalls () {
+    for (let i = 0; i < 7; i++) {
       yield i
     }
 
     done()
   }
 
-  const printCallsIterator = countPrintCalls();
+  const printCallsIterator = countPrintCalls()
 
   const mockExecuteCommand = (commandString, successMessage, errorMessage, nextFunctionCall) => {
-    expect(commandString).toEqual('cd ui; cd uiname; yarn build; cd ../')  
+    expect(commandString).toEqual('cd ui; cd uiname; yarn build; cd ../')
     expect(successMessage.length).toBeGreaterThan(0)
     expect(errorMessage.length).toBeGreaterThan(0)
     expect(nextFunctionCall.name).toEqual('executeDeployFunction')
-    this.commandObject = command    
+    this.commandObject = command
     nextFunctionCall(command)
   }
 
   const mockPrintMessage = (message) => {
-    expect(message.length).toBeGreaterThan(0)  
+    expect(message.length).toBeGreaterThan(0)
     printCallsIterator.next()
   }
 
@@ -73,7 +72,7 @@ test('webS3DeployCommand executes commands in sequence (with aws provider)', (do
   }
 
   const mockPutObjectCallback = (params, callback) => callback(null, 'Test upload success')
-  const mockS3 = class S3 { constructor() { return { putObject: mockPutObjectCallback } } }
+  const mockS3 = class S3 { constructor () { return { putObject: mockPutObjectCallback } } }
 
   global.AWS = {
     S3: mockS3
@@ -82,8 +81,8 @@ test('webS3DeployCommand executes commands in sequence (with aws provider)', (do
   global.mime = {
     lookup: mockMimeLookup
   }
-  
-  webS3DeployCommand.callback(['node', 'path', 'something', 'bucket', 'uiname', 'test'], { environments: { test: { provider: 'aws' } } }, command)  
+
+  webS3DeployCommand.callback(['node', 'path', 'something', 'bucket', 'uiname', 'test'], { environments: { test: { provider: 'aws' } } }, command)
 })
 
 test('webS3DeployCommand prints usage when bucket argument is not passed in', (done) => {
@@ -96,8 +95,7 @@ test('webS3DeployCommand prints usage when bucket argument is not passed in', (d
     printMessage: mockPrintMessage
   }
 
-  webS3DeployCommand.callback(['node', 'path', 'something', undefined, 'uiname', 'test'], { environments: { test: { provider: 'test' } } }, command)  
-
+  webS3DeployCommand.callback(['node', 'path', 'something', undefined, 'uiname', 'test'], { environments: { test: { provider: 'test' } } }, command)
 })
 
 test('webS3DeployCommand prints usage when uiname argument is not passed in', (done) => {
@@ -110,8 +108,7 @@ test('webS3DeployCommand prints usage when uiname argument is not passed in', (d
     printMessage: mockPrintMessage
   }
 
-  webS3DeployCommand.callback(['node', 'path', 'something', 'bucket', undefined, 'test'], { environments: { test: { provider: 'test' } } }, command)  
-
+  webS3DeployCommand.callback(['node', 'path', 'something', 'bucket', undefined, 'test'], { environments: { test: { provider: 'test' } } }, command)
 })
 
 test('webS3DeployCommand environment argument is optional and defaults to dev', (done) => {
@@ -125,14 +122,12 @@ test('webS3DeployCommand environment argument is optional and defaults to dev', 
     executeCommand: mockPrintMessage
   }
 
-  webS3DeployCommand.callback(['node', 'path', 'something', 'bucket', 'uiname', undefined], { environments: { dev: { provider: 'test' } } }, command)  
-
+  webS3DeployCommand.callback(['node', 'path', 'something', 'bucket', 'uiname', undefined], { environments: { dev: { provider: 'test' } } }, command)
 })
 
 test('webS3DeployCommand handles error during file reading', (done) => {
-
   const mockExecuteCommand = (commandString, successMessage, errorMessage, nextFunctionCall) => {
-    this.commandObject = command    
+    this.commandObject = command
     nextFunctionCall(command)
   }
 
@@ -155,7 +150,7 @@ test('webS3DeployCommand handles error during file reading', (done) => {
   }
 
   const mockPutObjectCallback = (params, callback) => callback(null, 'Test upload success')
-  const mockS3 = class S3 { constructor() { return { putObject: mockPutObjectCallback } } }
+  const mockS3 = class S3 { constructor () { return { putObject: mockPutObjectCallback } } }
 
   global.AWS = {
     S3: mockS3
@@ -164,15 +159,13 @@ test('webS3DeployCommand handles error during file reading', (done) => {
   global.mime = {
     lookup: mockMimeLookup
   }
-  
 
-  webS3DeployCommand.callback(['node', 'path', 'something', 'bucket', 'uiname', 'test'], { environments: { test: { provider: 'aws' } } }, command)  
+  webS3DeployCommand.callback(['node', 'path', 'something', 'bucket', 'uiname', 'test'], { environments: { test: { provider: 'aws' } } }, command)
 })
 
 test('webS3DeployCommand handles error during file upload', (done) => {
-
   const mockExecuteCommand = (commandString, successMessage, errorMessage, nextFunctionCall) => {
-    this.commandObject = command    
+    this.commandObject = command
     nextFunctionCall(command)
   }
 
@@ -195,7 +188,7 @@ test('webS3DeployCommand handles error during file upload', (done) => {
   }
 
   const mockPutObjectCallback = (params, callback) => callback(new Error('error handled'))
-  const mockS3 = class S3 { constructor() { return { putObject: mockPutObjectCallback } } }
+  const mockS3 = class S3 { constructor () { return { putObject: mockPutObjectCallback } } }
 
   global.AWS = {
     S3: mockS3
@@ -204,7 +197,6 @@ test('webS3DeployCommand handles error during file upload', (done) => {
   global.mime = {
     lookup: mockMimeLookup
   }
-  
-  webS3DeployCommand.callback(['node', 'path', 'something', 'bucket', 'uiname', 'test'], { environments: { test: { provider: 'aws' } } }, command)  
-})
 
+  webS3DeployCommand.callback(['node', 'path', 'something', 'bucket', 'uiname', 'test'], { environments: { test: { provider: 'aws' } } }, command)
+})

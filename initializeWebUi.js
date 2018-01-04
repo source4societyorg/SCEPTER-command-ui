@@ -54,8 +54,14 @@ function executeInitializeRepositoryFunction (command) {
 }
 
 function executeAddUiAsSubmoduleFunction (command) {
+  let commandStringArgument = ''
+  const shell = typeof command.parameters !== 'undefined' ? command.parameters.shell : 'bash'
+  switch (shell) {
+    case 'powershell':
+      commandStringArgument = 'o'
+  }
   command.executeCommand(
-    'rm -rf ./ui/' + initializeWebCommand.uiName + '; git submodule add --force ' + initializeWebCommand.targetRepository + ' ui/' + initializeWebCommand.uiName,
+    'rm -r -f' + commandStringArgument + ' ./ui/' + initializeWebCommand.uiName + '; git submodule add --force ' + initializeWebCommand.targetRepository + ' ui/' + initializeWebCommand.uiName,
     'Added UI as submodule to project under ui/' + initializeWebCommand.uiName,
     'Failed to add UI as submodule',
     initializeWebCommand.executeInstallCommand

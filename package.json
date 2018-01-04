@@ -1,6 +1,6 @@
 {
   "name": "SCEPTER-command-ui",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "SCEPTER project command plugin with various user interface commands",
   "main": "index.js",
   "repository": "https://github.com/source4societyorg/SCEPTER-command-ui",
@@ -8,7 +8,7 @@
   "license": "AGPL-3.0",
   "private": false,
   "scripts": {
-    "test": "eslint *.js && jest --coverage",
+    "test": "eslint ./**/*.js --ignore-path .gitignore && jest --coverage",
     "sls": "sls"
   },
   "dependencies": {
@@ -19,6 +19,7 @@
     "eslint": "^4.14.0",
     "eslint-config-standard": "^11.0.0-beta.0",
     "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jest": "^21.5.0",
     "eslint-plugin-node": "^5.2.1",
     "eslint-plugin-promise": "^3.6.0",
     "eslint-plugin-standard": "^3.0.1",
