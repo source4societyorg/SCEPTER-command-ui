@@ -46,7 +46,7 @@ test('webS3DeployCommand executes commands in sequence (with aws provider)', (do
   const printCallsIterator = countPrintCalls()
 
   const mockExecuteCommand = (commandString, successMessage, errorMessage, nextFunctionCall) => {
-    expect(commandString).toEqual('cd ui; cd uiname; yarn build; cd ../')
+    expect(commandString).toEqual('cd ui; cd uiname; yarn build:test; cd ../')
     expect(successMessage.length).toBeGreaterThan(0)
     expect(errorMessage.length).toBeGreaterThan(0)
     expect(nextFunctionCall.name).toEqual('executeDeployFunction')
