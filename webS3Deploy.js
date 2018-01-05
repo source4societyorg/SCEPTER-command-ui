@@ -36,7 +36,7 @@ function callbackFunction (args, credentials, command) {
 
 function executeBuildFunction (command) {
   command.executeCommand(
-    'cd ui; cd ' + uiDeployWebS3Command.uiName + '; yarn build; cd ../',
+    'cd ui; cd ' + uiDeployWebS3Command.uiName + '; yarn build:' + uiDeployWebS3Command.env + '; cd ../',
     'User interface build successful',
     'Failed to build user interface',
     uiDeployWebS3Command.executeDeployCommand

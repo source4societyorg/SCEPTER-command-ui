@@ -1,6 +1,6 @@
 {
   "name": "SCEPTER-command-ui",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "SCEPTER project command plugin with various user interface commands",
   "main": "index.js",
   "repository": "https://github.com/source4societyorg/SCEPTER-command-ui",
