@@ -42,7 +42,7 @@ test('webS3DeployCommand has callback which sets up and kicks off command execut
     printMessage: mockPrintCommand
   }
 
-  webS3DeployCommand.callback(['node', 'path', 'something', 'bucket', 'uiname', 'test'], mockCredentials, command)
+  webS3DeployCommand.callback(['node', 'path', 'something', 'uiname', 'test', 'bucket'], mockCredentials, command)
 })
 
 test('webS3DeployCommand executes commands in sequence (with aws provider)', (done) => {
@@ -93,7 +93,7 @@ test('webS3DeployCommand executes commands in sequence (with aws provider)', (do
     lookup: mockMimeLookup
   }
 
-  webS3DeployCommand.callback(['node', 'path', 'something', 'bucket', 'uiname', 'test'], mockCredentials, command)
+  webS3DeployCommand.callback(['node', 'path', 'something', 'uiname', 'test', 'bucket'], mockCredentials, command)
 })
 
 test('webS3DeployCommand prints usage when bucket argument is not passed in', (done) => {
@@ -106,7 +106,7 @@ test('webS3DeployCommand prints usage when bucket argument is not passed in', (d
     printMessage: mockPrintMessage
   }
 
-  webS3DeployCommand.callback(['node', 'path', 'something', undefined, 'uiname', 'test'], mockCredentials, command)
+  webS3DeployCommand.callback(['node', 'path', 'something', 'uiname', 'test', undefined], mockCredentials, command)
 })
 
 test('webS3DeployCommand prints usage when uiname argument is not passed in', (done) => {
@@ -119,7 +119,7 @@ test('webS3DeployCommand prints usage when uiname argument is not passed in', (d
     printMessage: mockPrintMessage
   }
 
-  webS3DeployCommand.callback(['node', 'path', 'something', 'bucket', undefined, 'test'], mockCredentials, command)
+  webS3DeployCommand.callback(['node', 'path', 'something', undefined, 'test', 'bucket'], mockCredentials, command)
 })
 
 test('webS3DeployCommand environment argument is optional and defaults to dev', (done) => {
@@ -133,7 +133,7 @@ test('webS3DeployCommand environment argument is optional and defaults to dev', 
     executeCommand: mockPrintMessage
   }
 
-  webS3DeployCommand.callback(['node', 'path', 'something', 'bucket', 'uiname', undefined], mockCredentials, command)
+  webS3DeployCommand.callback(['node', 'path', 'something', 'uiName', undefined, 'bucket'], mockCredentials, command)
 })
 
 test('webS3DeployCommand handles error during file reading', (done) => {
@@ -171,7 +171,7 @@ test('webS3DeployCommand handles error during file reading', (done) => {
     lookup: mockMimeLookup
   }
 
-  webS3DeployCommand.callback(['node', 'path', 'something', 'bucket', 'uiname', 'test'], mockCredentials, command)
+  webS3DeployCommand.callback(['node', 'path', 'something', 'uiname', 'test', 'bucket'], mockCredentials, command)
 })
 
 test('webS3DeployCommand handles error during file upload', (done) => {
@@ -209,5 +209,5 @@ test('webS3DeployCommand handles error during file upload', (done) => {
     lookup: mockMimeLookup
   }
 
-  webS3DeployCommand.callback(['node', 'path', 'something', 'bucket', 'uiname', 'test'], mockCredentials, command)
+  webS3DeployCommand.callback(['node', 'path', 'something', 'uiname', 'test', 'bucket'], mockCredentials, command)
 })
