@@ -10,6 +10,10 @@
     esutils "^2.0.2"
     js-tokens "^3.0.0"
 
+"@source4society/scepter-utility-lib@^0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@source4society/scepter-utility-lib/-/scepter-utility-lib-0.0.5.tgz#6ad12e3102e171eb6e541b65b035ad9c1c9c8397"
+
 "@types/node@*":
   version "8.5.2"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-8.5.2.tgz#83b8103fa9a2c2e83d78f701a9aa7c9539739aa5"
@@ -1332,6 +1336,10 @@ ieee754@^1.1.4:
 ignore@^3.3.3, ignore@^3.3.6:
   version "3.3.7"
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-3.3.7.tgz#612289bfb3c220e186a58118618d5be8c1bab021"
+
+immutable@^3.8.2:
+  version "3.8.2"
+  resolved "https://registry.yarnpkg.com/immutable/-/immutable-3.8.2.tgz#c2439951455bb39913daf281376f1530e104adf3"
 
 imurmurhash@^0.1.4:
   version "0.1.4"

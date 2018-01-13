@@ -1,6 +1,17 @@
 const webS3DeployCommand = require('../webS3Deploy.js')
 const mockReaddirSync = (folder) => ['afile.html', 'afile.js', 'anotherfile.jpg']
 const mockMimeLookup = (filepath) => 'test/filemime'
+const immutable = require('immutable')
+const mockCredentials = immutable.fromJS({
+  environments: {
+    test: {
+      provider: {
+        aws: {}
+      }
+    }
+  },
+  parameters: { }
+})
 
 test('webS3DeployCommand has the correct command property', () => {
   expect(webS3DeployCommand.command).toEqual('ui:deployWebS3')
@@ -23,7 +34,7 @@ test('webS3DeployCommand has callback which sets up and kicks off command execut
   }
 
   const mockPrintCommand = (message) => {
-    expect(message).toEqual('Deploy would take place to test provider')
+    expect(message).toEqual('Deploy will take place to aws provider')
   }
 
   const command = {
@@ -31,7 +42,7 @@ test('webS3DeployCommand has callback which sets up and kicks off command execut
     printMessage: mockPrintCommand
   }
 
-  webS3DeployCommand.callback(['node', 'path', 'something', 'bucket', 'uiname', 'test'], { environments: { test: { provider: 'test' } } }, command)
+  webS3DeployCommand.callback(['node', 'path', 'something', 'bucket', 'uiname', 'test'], mockCredentials, command)
 })
 
 test('webS3DeployCommand executes commands in sequence (with aws provider)', (done) => {
@@ -49,7 +60,7 @@ test('webS3DeployCommand executes commands in sequence (with aws provider)', (do
     expect(commandString).toEqual('cd ui; cd uiname; yarn build:test; cd ../')
     expect(successMessage.length).toBeGreaterThan(0)
     expect(errorMessage.length).toBeGreaterThan(0)
-    expect(nextFunctionCall.name).toEqual('executeDeployFunction')
+    expect(nextFunctionCall.name).toEqual('executeAwsDeployFunction')
     this.commandObject = command
     nextFunctionCall(command)
   }
@@ -82,7 +93,7 @@ test('webS3DeployCommand executes commands in sequence (with aws provider)', (do
     lookup: mockMimeLookup
   }
 
-  webS3DeployCommand.callback(['node', 'path', 'something', 'bucket', 'uiname', 'test'], { environments: { test: { provider: 'aws' } } }, command)
+  webS3DeployCommand.callback(['node', 'path', 'something', 'bucket', 'uiname', 'test'], mockCredentials, command)
 })
 
 test('webS3DeployCommand prints usage when bucket argument is not passed in', (done) => {
@@ -95,7 +106,7 @@ test('webS3DeployCommand prints usage when bucket argument is not passed in', (d
     printMessage: mockPrintMessage
   }
 
-  webS3DeployCommand.callback(['node', 'path', 'something', undefined, 'uiname', 'test'], { environments: { test: { provider: 'test' } } }, command)
+  webS3DeployCommand.callback(['node', 'path', 'something', undefined, 'uiname', 'test'], mockCredentials, command)
 })
 
 test('webS3DeployCommand prints usage when uiname argument is not passed in', (done) => {
@@ -108,7 +119,7 @@ test('webS3DeployCommand prints usage when uiname argument is not passed in', (d
     printMessage: mockPrintMessage
   }
 
-  webS3DeployCommand.callback(['node', 'path', 'something', 'bucket', undefined, 'test'], { environments: { test: { provider: 'test' } } }, command)
+  webS3DeployCommand.callback(['node', 'path', 'something', 'bucket', undefined, 'test'], mockCredentials, command)
 })
 
 test('webS3DeployCommand environment argument is optional and defaults to dev', (done) => {
@@ -122,7 +133,7 @@ test('webS3DeployCommand environment argument is optional and defaults to dev', 
     executeCommand: mockPrintMessage
   }
 
-  webS3DeployCommand.callback(['node', 'path', 'something', 'bucket', 'uiname', undefined], { environments: { dev: { provider: 'test' } } }, command)
+  webS3DeployCommand.callback(['node', 'path', 'something', 'bucket', 'uiname', undefined], mockCredentials, command)
 })
 
 test('webS3DeployCommand handles error during file reading', (done) => {
@@ -160,7 +171,7 @@ test('webS3DeployCommand handles error during file reading', (done) => {
     lookup: mockMimeLookup
   }
 
-  webS3DeployCommand.callback(['node', 'path', 'something', 'bucket', 'uiname', 'test'], { environments: { test: { provider: 'aws' } } }, command)
+  webS3DeployCommand.callback(['node', 'path', 'something', 'bucket', 'uiname', 'test'], mockCredentials, command)
 })
 
 test('webS3DeployCommand handles error during file upload', (done) => {
@@ -198,5 +209,5 @@ test('webS3DeployCommand handles error during file upload', (done) => {
     lookup: mockMimeLookup
   }
 
-  webS3DeployCommand.callback(['node', 'path', 'something', 'bucket', 'uiname', 'test'], { environments: { test: { provider: 'aws' } } }, command)
+  webS3DeployCommand.callback(['node', 'path', 'something', 'bucket', 'uiname', 'test'], mockCredentials, command)
 })

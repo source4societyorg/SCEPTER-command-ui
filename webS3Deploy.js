@@ -5,19 +5,18 @@ global.mime = require('mime-types')
 
 const uiDeployWebS3Command = {
   command: 'ui:deployWebS3',
-  usage: 'ui:deployWebS3 <bucket> <ui-name> [<env>]',
+  usage: 'ui:deployWebS3 <ui-name> [<env>] [<bucket>]',
   description: 'Deploys target ui to the specified S3 bucket',
   callback: callbackFunction,
   executeBuildCommand: executeBuildFunction,
-  executeDeployCommand: executeDeployFunction,
   executeAwsDeployCommand: executeAwsDeployFunction,
   uploadCallback: uploadCallbackFunction
 }
 
 function callbackFunction (args, credentials, command) {
-  const env = args[5] || 'dev'
-  const uiName = args[4]
-  const bucket = args[3] || credentials.environments[env].bucket
+  const uiName = args[3]
+  const env = args[4] || 'dev'
+  const bucket = args[5] || credentials.getIn(['parameters', 'environments', env, 'ui', uiName, 'bucket'])
   this.commandObject = command
   this.credentials = credentials
   this.bucket = bucket
@@ -29,8 +28,12 @@ function callbackFunction (args, credentials, command) {
   if (typeof bucket === 'undefined' || typeof uiName === 'undefined') {
     command.printMessage('Usage: node bin/scepter ' + uiDeployWebS3Command.usage)
   } else {
-    command.printMessage('Deploy would take place to ' + credentials.environments[env].provider + ' provider')
-    uiDeployWebS3Command.executeBuildCommand(command)
+    if (typeof credentials.getIn(['environments', env, 'provider', 'aws']) === 'undefined') {
+      command.printMessage('You must add the AWS credentials object to the ' + env + ' environment configuration')
+    } else {
+      command.printMessage('Deploy will take place to aws provider')
+      uiDeployWebS3Command.executeBuildCommand(command)
+    }
   }
 }
 
@@ -39,14 +42,8 @@ function executeBuildFunction (command) {
     'cd ui; cd ' + uiDeployWebS3Command.uiName + '; yarn build:' + uiDeployWebS3Command.env + '; cd ../',
     'User interface build successful',
     'Failed to build user interface',
-    uiDeployWebS3Command.executeDeployCommand
+    uiDeployWebS3Command.executeAwsDeployCommand
   )
-}
-
-function executeDeployFunction (command) {
-  if (uiDeployWebS3Command.credentials.environments[uiDeployWebS3Command.env].provider === 'aws') {
-    uiDeployWebS3Command.executeAwsDeployCommand(command)
-  }
 }
 
 function executeAwsDeployFunction (command) { // eslint-disable-line no-unused-vars

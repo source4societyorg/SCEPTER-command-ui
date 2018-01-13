@@ -19,3 +19,19 @@ A SCEPTER framework command plugin to initialize, connect and deploy various use
 `ui:initializeWeb <ui-name> <target-repository> [<ui-repository>]`
 
   This command will fork the [SCEPTER-webui](https://github.com/source4societyorg/SCEPTER-webui) repository by default, and add the fork as submodule to your projects `ui` folder as the name specified by the `ui-name` argument. The `target-repository` argument should consist of the uri of the repository you wish to receive the fork of SCEPTER-webui. You can substitute a different boilerplate by providing the optional `ui-repository` argument. 
+
+`ui:deployWebS3 <ui-name> [<env>] [<bucket>]`
+
+  This command will automatically deploy the `build` directory within the specified ui/<ui-name> folder to the S3 bucket passed in via the command line or defined in config/parameters.json within the SCEPTER project. The parameters configuration should look similar to the following with the values of yourenv and uiName replaced with the corresponding values of the env and uiName variables you will pass in via command line:
+  
+    {
+      environments: {
+        yourenv: {
+          ui: {
+            uiName: {
+              bucket: 'your-bucket-name'
+            }
+          }
+        }
+      }
+    }
