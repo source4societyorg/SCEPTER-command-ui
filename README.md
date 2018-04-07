@@ -36,3 +36,19 @@ A SCEPTER framework command plugin to initialize, connect and deploy various use
         }
       }
     }
+
+`ui:bustCloudFront <ui-name> [<env>] [<distributionId>]`
+
+  This command will automatically invalidate the cache for a given AWS cloud front distribution id. The first argument should be the name of the target user interface. Optionally, the environment can be passed in, otherwise it will default to `development`. The last argument is optional and only required if the distribution id is not specified in the config (the second argument no longer becomes optional if you wish to pass the third argument in). You can add your distribution id to your parameters.json using the following structure:
+  
+    {
+      environments: {
+        yourenv: {
+          ui: {
+            uiName: {
+              distributionId: 'your-distribution-id'
+            }
+          }
+        }
+      }
+    }
